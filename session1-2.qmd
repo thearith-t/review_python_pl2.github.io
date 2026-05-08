@@ -1,0 +1,1054 @@
+---
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    transition: fade
+    font-family: 'Trebuchet MS'
+    scrollable: true
+---
+
+<style>
+body { font-family: 'Trebuchet MS', sans-serif; }
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 { color: #2980b9; }
+.reveal { font-family: 'Trebuchet MS', sans-serif; }
+
+/* QCM Styles */
+.qcm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 24px;
+}
+.qcm-option {
+  background: #f0f4f8;
+  border: 2px solid #bdc3c7;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-family: 'Trebuchet MS', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.qcm-option:hover { border-color: #2980b9; background: #ebf5fb; }
+.qcm-option.correct {
+  background: #d5f5e3;
+  border-color: #27ae60;
+  color: #1e8449;
+  font-weight: 700;
+}
+.qcm-option.wrong {
+  background: #fde8e8;
+  border-color: #e74c3c;
+  color: #c0392b;
+}
+.qcm-option .badge {
+  font-size: 1.2em;
+  min-width: 24px;
+}
+.qcm-label {
+  font-weight: 700;
+  color: #2980b9;
+  margin-right: 4px;
+}
+.qcm-question {
+  font-size: 1.25em;
+  font-weight: 600;
+  color: #2c3e50;
+  background: #eaf2fb;
+  border-left: 5px solid #2980b9;
+  padding: 14px 18px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.q-number {
+  font-size: 0.85em;
+  color: #7f8c8d;
+  margin-bottom: 6px;
+}
+.reveal pre { font-size: 0.72em; }
+</style>
+
+<script>
+function qcm(optionEl, isCorrect) {
+  const grid = optionEl.closest('.qcm-grid');
+  if (grid.dataset.answered) return;
+  grid.dataset.answered = "true";
+  const opts = grid.querySelectorAll('.qcm-option');
+  opts.forEach(o => {
+    o.style.cursor = 'default';
+    if (o === optionEl) {
+      o.classList.add(isCorrect ? 'correct' : 'wrong');
+      o.querySelector('.badge').textContent = isCorrect ? '✅' : '❌';
+    } else if (o.dataset.correct === "true") {
+      o.classList.add('correct');
+      o.querySelector('.badge').textContent = '✅';
+    }
+  });
+}
+</script>
+
+<div style="text-align:center; margin-top: 40px; line-height: 1.4;">
+  <h1 style="font-size: 2.5em; font-weight: 700; color: #2980b9; margin-bottom: 10px;">
+    Programming Language II
+  </h1>
+  <h2 style="font-size: 1.6em; font-weight: 500; color: #555;">
+    Review: Data Types, Collections & Methods
+  </h2>
+  <div style="border-bottom: 4px solid #e74c3c; width: 45%; margin: 18px auto;"></div>
+  <h3 style="margin-top: 25px; font-weight: 700; color: #050E3C">
+    By: MIN Sothearith
+  </h3>
+  <h4 style="font-weight: 700; color: #666;">
+    Phnom Penh International University
+  </h4>
+</div>
+
+## Today's Session
+
+**Two Parts — ~3 Hours:**
+
+::: {.callout-note}
+## 📚 Part 1 — Review (Slides 1–30)
+Data Types · Collections · Operations · Printing & Formatting · List · Tuple · Dictionary · String & List Methods
+:::
+
+::: {.callout-tip}
+## 🎯 Part 2 — Quiz (40 Questions)
+Multiple-choice questions on everything above. Click an answer — see instant feedback!
+:::
+
+---
+
+# PART 1: Review
+
+---
+
+# Chapter 1: Data Types
+
+## 1.1 — What is a Data Type?
+
+Every value in Python has a **type** that tells Python what kind of data it is and what operations are allowed.
+
+```python
+x = 42          # int
+y = 3.14        # float
+name = "Alice"  # str
+flag = True     # bool
+nothing = None  # NoneType
+```
+
+::: {.callout-tip}
+Use `type()` to check the type of any value:
+```python
+print(type(42))       # <class 'int'>
+print(type("hello"))  # <class 'str'>
+print(type(True))     # <class 'bool'>
+```
+:::
+
+## 1.2 — Numeric Types
+
+**int** — whole numbers (no decimal):
+```python
+age = 25
+year = 2025
+negative = -10
+```
+
+**float** — numbers with a decimal point:
+```python
+price = 9.99
+temperature = 36.6
+pi = 3.14159
+```
+
+**Type conversion:**
+```python
+int(3.9)      # → 3  (truncates, does NOT round)
+float(5)      # → 5.0
+int("42")     # → 42
+str(100)      # → "100"
+```
+
+## 1.3 — Strings
+
+A **string** is a sequence of characters enclosed in quotes:
+
+```python
+s1 = "Hello"
+s2 = 'World'
+s3 = """Multi
+line string"""
+```
+
+Key properties:
+- **Indexed** — each character has a position starting at `0`
+- **Immutable** — you cannot change individual characters after creation
+- **Iterable** — you can loop over each character
+
+```python
+s = "Python"
+print(s[0])    # P
+print(s[-1])   # n
+print(s[1:4])  # yth
+print(len(s))  # 6
+```
+
+## 1.4 — Booleans & None
+
+**bool** — only two values: `True` or `False`
+
+```python
+is_active = True
+is_admin  = False
+
+# These expressions evaluate to bool:
+print(10 > 5)       # True
+print(10 == 5)      # False
+print(type(True))   # <class 'bool'>
+```
+
+**None** — represents the absence of a value:
+
+```python
+result = None
+if result is None:
+    print("No result yet.")
+```
+
+::: {.callout-note}
+`None` is NOT the same as `0`, `""`, or `False` — but all are **falsy**.
+:::
+
+---
+
+# Chapter 2: Operations
+
+## 2.1 — Arithmetic Operations
+
+| Operator | Name | Example | Result |
+|----------|------|---------|--------|
+| `+` | Addition | `7 + 3` | `10` |
+| `-` | Subtraction | `7 - 3` | `4` |
+| `*` | Multiplication | `7 * 3` | `21` |
+| `/` | Division (float) | `7 / 2` | `3.5` |
+| `//` | Floor Division | `7 // 2` | `3` |
+| `%` | Modulo | `7 % 2` | `1` |
+| `**` | Power | `2 ** 8` | `256` |
+
+```python
+print(17 // 5)   # 3  (quotient only)
+print(17 % 5)    # 2  (remainder only)
+print(2 ** 10)   # 1024
+```
+
+## 2.2 — Comparison & Logical Operators
+
+**Comparison** — always return `bool`:
+
+```python
+==  !=  >  <  >=  <=
+```
+
+```python
+print(5 == 5)    # True
+print(5 != 3)    # True
+print(10 >= 10)  # True
+```
+
+**Logical:**
+
+```python
+and  # Both must be True
+or   # At least one must be True
+not  # Reverse the bool
+```
+
+```python
+age = 20
+print(age >= 18 and age < 65)   # True
+print(age < 10 or age > 18)     # True
+print(not True)                  # False
+```
+
+## 2.3 — String Operations
+
+```python
+# Concatenation
+first = "Hello"
+second = "World"
+print(first + " " + second)    # Hello World
+
+# Repetition
+print("Ha" * 3)                # HaHaHa
+
+# Membership
+print("ell" in "Hello")        # True
+print("xyz" not in "Hello")    # True
+
+# Length
+print(len("Python"))           # 6
+```
+
+**Slicing:**
+```python
+s = "Programming"
+print(s[0:4])     # Prog
+print(s[::2])     # Pormig  (every 2nd char)
+print(s[::-1])    # gnimmargorP  (reversed)
+```
+
+---
+
+# Chapter 3: Printing & Formatting
+
+## 3.1 — The print() Function
+
+```python
+print("Hello")                    # Hello
+print("a", "b", "c")             # a b c
+print("a", "b", sep="-")         # a-b-c
+print("Hello", end="!")           # Hello! (no newline)
+print()                           # blank line
+```
+
+**Printing variables:**
+```python
+name = "Sothearith"
+score = 95
+print("Name:", name)
+print("Score:", score)
+```
+
+## 3.2 — f-Strings (Formatted String Literals)
+
+The modern, recommended way to format strings in Python 3.6+:
+
+```python
+name = "Alice"
+score = 87.5
+
+print(f"Student: {name}")
+print(f"Score: {score:.2f}")       # 87.50
+print(f"Score: {score:.0f}")       # 88
+print(f"Value: {10 * 3}")          # Value: 30
+```
+
+**Alignment & padding:**
+```python
+print(f"{'Name':<15} {'Score':>6}")
+print(f"{'Alice':<15} {87.5:>6.1f}")
+# Name             Score
+# Alice             87.5
+```
+
+## 3.3 — Other Formatting Methods
+
+**`.format()` method:**
+```python
+print("Hello, {}!".format("World"))
+print("{0} + {1} = {2}".format(3, 4, 7))
+```
+
+**`%` operator (older style):**
+```python
+print("Name: %s, Age: %d" % ("Bob", 30))
+print("Pi = %.4f" % 3.14159)
+```
+
+**Escape sequences:**
+```python
+print("Line1\nLine2")   # newline
+print("Tab\there")      # tab
+print("She said \"Hi\"")  # quotes inside string
+```
+
+---
+
+# Chapter 4: Lists
+
+## 4.1 — What is a List?
+
+A **list** is an ordered, mutable (changeable) collection that can hold items of any type:
+
+```python
+fruits = ["apple", "banana", "cherry"]
+numbers = [10, 20, 30, 40]
+mixed  = [1, "hello", True, 3.14]
+empty  = []
+```
+
+**Indexing & Slicing:**
+```python
+fruits = ["apple", "banana", "cherry", "date"]
+print(fruits[0])      # apple
+print(fruits[-1])     # date
+print(fruits[1:3])    # ['banana', 'cherry']
+print(fruits[::-1])   # reversed list
+```
+
+## 4.2 — List Methods
+
+| Method | What it does | Example |
+|--------|-------------|---------|
+| `.append(x)` | Add `x` to end | `lst.append(5)` |
+| `.insert(i, x)` | Insert `x` at index `i` | `lst.insert(0, 1)` |
+| `.remove(x)` | Remove first `x` | `lst.remove("a")` |
+| `.pop(i)` | Remove & return item at `i` | `lst.pop()` |
+| `.sort()` | Sort in place | `lst.sort()` |
+| `.reverse()` | Reverse in place | `lst.reverse()` |
+| `.index(x)` | Find index of `x` | `lst.index(3)` |
+| `.count(x)` | Count occurrences of `x` | `lst.count(2)` |
+| `.clear()` | Remove all items | `lst.clear()` |
+| `.copy()` | Shallow copy | `lst2 = lst.copy()` |
+| `len(lst)` | Number of items | `len(lst)` |
+
+## 4.3 — List Methods in Action
+
+```python
+nums = [3, 1, 4, 1, 5, 9, 2, 6]
+
+nums.append(7)
+print(nums)            # [3, 1, 4, 1, 5, 9, 2, 6, 7]
+
+nums.remove(1)         # removes first 1
+print(nums)            # [3, 4, 1, 5, 9, 2, 6, 7]
+
+popped = nums.pop()    # removes last item
+print(popped)          # 7
+
+nums.sort()
+print(nums)            # [1, 2, 3, 4, 5, 6, 9]
+
+print(nums.count(1))   # 1
+print(nums.index(5))   # 4
+```
+
+---
+
+# Chapter 5: Tuples
+
+## 5.1 — What is a Tuple?
+
+A **tuple** is an ordered, **immutable** (unchangeable) collection:
+
+```python
+point   = (3, 7)
+colors  = ("red", "green", "blue")
+single  = (42,)       # ← comma required for single item!
+empty   = ()
+no_paren = 1, 2, 3    # parentheses optional
+```
+
+**Why use tuples instead of lists?**
+
+- Data that should NOT change (coordinates, RGB values, dates)
+- Slightly faster than lists
+- Can be used as dictionary keys (lists cannot)
+
+```python
+point = (3, 7)
+# point[0] = 10   ← TypeError! Tuples are immutable
+print(point[0])   # 3 ✅ reading is fine
+```
+
+## 5.2 — Tuple Operations
+
+```python
+t = (10, 20, 30, 20, 40)
+
+# Indexing & slicing (same as list)
+print(t[1])         # 20
+print(t[-1])        # 40
+print(t[1:3])       # (20, 30)
+
+# Methods (only 2!)
+print(t.count(20))  # 2
+print(t.index(30))  # 2
+
+# Length
+print(len(t))       # 5
+
+# Unpacking
+x, y = (3, 7)
+print(x, y)         # 3 7
+
+a, *rest = (1, 2, 3, 4)
+print(a, rest)      # 1 [2, 3, 4]
+```
+
+---
+
+# Chapter 6: Dictionaries
+
+## 6.1 — What is a Dictionary?
+
+A **dictionary** stores data as **key: value** pairs. Keys are unique and immutable; values can be anything:
+
+```python
+student = {
+    "name": "Alice",
+    "age": 20,
+    "gpa": 3.8
+}
+
+print(student["name"])    # Alice
+print(student["gpa"])     # 3.8
+```
+
+**Accessing safely with `.get()`:**
+```python
+print(student.get("age"))          # 20
+print(student.get("score", 0))     # 0 (default if key missing)
+```
+
+## 6.2 — Dictionary Methods
+
+| Method | What it does |
+|--------|-------------|
+| `d[key] = val` | Add or update |
+| `del d[key]` | Delete a key |
+| `d.get(k, default)` | Safe access |
+| `d.keys()` | All keys |
+| `d.values()` | All values |
+| `d.items()` | All (key, value) pairs |
+| `d.update({...})` | Merge another dict |
+| `d.pop(key)` | Remove and return value |
+| `key in d` | Check membership |
+| `len(d)` | Number of pairs |
+
+```python
+d = {"a": 1, "b": 2}
+d["c"] = 3
+print(list(d.keys()))    # ['a', 'b', 'c']
+print(list(d.values()))  # [1, 2, 3]
+for k, v in d.items():
+    print(k, "→", v)
+```
+
+---
+
+# Chapter 7: String Methods
+
+## 7.1 — Essential String Methods
+
+```python
+s = "  Hello, World!  "
+
+s.strip()           # "Hello, World!"   (remove whitespace)
+s.lower()           # "  hello, world!  "
+s.upper()           # "  HELLO, WORLD!  "
+s.replace("World", "Python")   # "  Hello, Python!  "
+s.split(", ")       # ['  Hello', 'World!  ']
+", ".join(["a","b","c"])       # "a, b, c"
+```
+
+## 7.2 — More String Methods
+
+```python
+s = "Hello, Python!"
+
+s.startswith("Hello")   # True
+s.endswith("!")         # True
+s.find("Python")        # 7  (index where it starts)
+s.count("l")            # 2
+s.isdigit()             # False
+s.isalpha()             # False (has comma & space)
+s.capitalize()          # "Hello, python!"
+s.title()               # "Hello, Python!"
+s.center(20, "*")       # "***Hello, Python!***"
+s.zfill(20)             # left-pads with zeros
+```
+
+::: {.callout-important}
+String methods return **new strings** — they do NOT modify the original (strings are immutable)!
+:::
+
+---
+
+## Review Summary
+
+| Topic | Key Points |
+|-------|-----------|
+| **Data Types** | `int`, `float`, `str`, `bool`, `None` — use `type()` to check |
+| **Operations** | `+  -  *  /  //  %  **` — comparison returns `bool` |
+| **Printing** | `print()`, f-strings `f"{var:.2f}"`, `sep=`, `end=` |
+| **List** | Ordered, mutable, `[]` — `.append()`, `.sort()`, `.pop()` |
+| **Tuple** | Ordered, immutable, `()` — `.count()`, `.index()`, unpacking |
+| **Dictionary** | Key-value, `{}` — `.keys()`, `.values()`, `.items()`, `.get()` |
+| **String Methods** | `.strip()`, `.lower()`, `.split()`, `.join()`, `.replace()`, `.find()` |
+
+::: {.callout-tip}
+## Ready for the Quiz?
+40 questions ahead — click your answer and see if you're right! 🎯
+:::
+
+---
+
+# PART 2: Quiz Time! 🎯
+
+---
+
+## Q1 / 40
+
+<div class="q-number">Question 1 of 40 — Data Types</div>
+<div class="qcm-question">What is the data type of the value <code>3.14</code> in Python?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> int</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> float</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> str</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> double</button>
+</div>
+
+## Q2 / 40
+
+<div class="q-number">Question 2 of 40 — Data Types</div>
+<div class="qcm-question">What does <code>type("123")</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> &lt;class 'int'&gt;</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> &lt;class 'float'&gt;</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> &lt;class 'str'&gt;</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> &lt;class 'num'&gt;</button>
+</div>
+
+## Q3 / 40
+
+<div class="q-number">Question 3 of 40 — Data Types</div>
+<div class="qcm-question">What is the result of <code>int(7.9)</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 8</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> 7</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> 7.9</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q4 / 40
+
+<div class="q-number">Question 4 of 40 — Data Types</div>
+<div class="qcm-question">Which value is <strong>falsy</strong> in Python?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> "False"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> 1</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> 0</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> "0"</button>
+</div>
+
+## Q5 / 40
+
+<div class="q-number">Question 5 of 40 — Data Types</div>
+<div class="qcm-question">What is the result of <code>str(True)</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> "1"</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> "True"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> True</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q6 / 40
+
+<div class="q-number">Question 6 of 40 — Operations</div>
+<div class="qcm-question">What is the result of <code>17 % 5</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 3</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> 2</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> 3.4</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> 5</button>
+</div>
+
+## Q7 / 40
+
+<div class="q-number">Question 7 of 40 — Operations</div>
+<div class="qcm-question">What is the result of <code>2 ** 10</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 20</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> 100</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> 1024</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> 512</button>
+</div>
+
+## Q8 / 40
+
+<div class="q-number">Question 8 of 40 — Operations</div>
+<div class="qcm-question">What does <code>7 // 2</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 3.5</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> 3</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> 4</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> 1</button>
+</div>
+
+## Q9 / 40
+
+<div class="q-number">Question 9 of 40 — Operations</div>
+<div class="qcm-question">What does <code>"Ha" * 3</code> produce?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> "Ha Ha Ha"</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> "HaHaHa"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> Error</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> "Ha3"</button>
+</div>
+
+## Q10 / 40
+
+<div class="q-number">Question 10 of 40 — Operations</div>
+<div class="qcm-question">What is the result of <code>"ell" in "Hello"</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">A.</span> True</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> False</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> 1</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q11 / 40
+
+<div class="q-number">Question 11 of 40 — Printing & Formatting</div>
+<div class="qcm-question">What does <code>print("a", "b", sep="-")</code> output?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> a b</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> a-b</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> "a"-"b"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> ab</button>
+</div>
+
+## Q12 / 40
+
+<div class="q-number">Question 12 of 40 — Printing & Formatting</div>
+<div class="qcm-question">Given <code>x = 3.14159</code>, what does <code>f"{x:.2f}"</code> produce?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> "3.1"</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> "3.14"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> "3.141"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> "3.15"</button>
+</div>
+
+## Q13 / 40
+
+<div class="q-number">Question 13 of 40 — Printing & Formatting</div>
+<div class="qcm-question">What character does <code>\n</code> represent in a string?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> Tab</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> Newline</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> Backslash</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Space</button>
+</div>
+
+## Q14 / 40
+
+<div class="q-number">Question 14 of 40 — Printing & Formatting</div>
+<div class="qcm-question">Which prints <code>Hello!</code> without a trailing newline?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> print("Hello!", nl=False)</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> print("Hello!", end="")</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> print("Hello!", sep="")</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> print("Hello!", "\0")</button>
+</div>
+
+## Q15 / 40
+
+<div class="q-number">Question 15 of 40 — Printing & Formatting</div>
+<div class="qcm-question">What is the output of <code>print(f"{2 + 3 * 4}")</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 20</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> 14</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> "2 + 3 * 4"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q16 / 40
+
+<div class="q-number">Question 16 of 40 — Lists</div>
+<div class="qcm-question">Given <code>lst = [10, 20, 30, 40]</code>, what is <code>lst[-1]</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 10</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> 30</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> 40</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q17 / 40
+
+<div class="q-number">Question 17 of 40 — List Methods</div>
+<div class="qcm-question">After <code>lst = [1,2,3]</code> and <code>lst.append(4)</code>, what is <code>lst</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> [4, 1, 2, 3]</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> [1, 2, 3, 4]</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> [1, 2, 3]</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q18 / 40
+
+<div class="q-number">Question 18 of 40 — List Methods</div>
+<div class="qcm-question">What does <code>lst.pop()</code> do by default?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> Removes the first item</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> Removes and returns the last item</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> Clears the entire list</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Returns the last item without removing</button>
+</div>
+
+## Q19 / 40
+
+<div class="q-number">Question 19 of 40 — List Methods</div>
+<div class="qcm-question">Given <code>lst = [3, 1, 4, 1, 5]</code>, what does <code>lst.count(1)</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 1</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> 2</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> 3</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> True</button>
+</div>
+
+## Q20 / 40
+
+<div class="q-number">Question 20 of 40 — Lists</div>
+<div class="qcm-question">Given <code>lst = [10, 20, 30, 40, 50]</code>, what is <code>lst[1:4]</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> [10, 20, 30]</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> [20, 30, 40]</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> [20, 30, 40, 50]</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> [10, 20, 30, 40]</button>
+</div>
+
+## Q21 / 40
+
+<div class="q-number">Question 21 of 40 — List Methods</div>
+<div class="qcm-question">What is the difference between <code>.remove(x)</code> and <code>.pop(i)</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> They are identical</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> .remove() uses index; .pop() uses value</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> .remove() uses value; .pop() uses index and returns the item</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> .pop() deletes all occurrences</button>
+</div>
+
+## Q22 / 40
+
+<div class="q-number">Question 22 of 40 — Tuples</div>
+<div class="qcm-question">Which of the following is a valid single-element tuple?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> (42)</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> (42,)</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> [42]</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> {42}</button>
+</div>
+
+## Q23 / 40
+
+<div class="q-number">Question 23 of 40 — Tuples</div>
+<div class="qcm-question">What happens if you try to change a tuple element: <code>t = (1,2,3); t[0] = 9</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> t becomes (9, 2, 3)</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> t becomes [9, 2, 3]</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> TypeError — tuples are immutable</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> SyntaxError</button>
+</div>
+
+## Q24 / 40
+
+<div class="q-number">Question 24 of 40 — Tuples</div>
+<div class="qcm-question">What does tuple unpacking do in: <code>x, y = (3, 7)</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> x = (3,7) and y = (3,7)</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> x = 3 and y = 7</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> x = 7 and y = 3</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q25 / 40
+
+<div class="q-number">Question 25 of 40 — Tuples</div>
+<div class="qcm-question">How many methods does a tuple have (built-in)?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 0</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> 2 — count() and index()</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> 5</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Same as list</button>
+</div>
+
+## Q26 / 40
+
+<div class="q-number">Question 26 of 40 — Dictionaries</div>
+<div class="qcm-question">Given <code>d = {"a": 1, "b": 2}</code>, what does <code>d.get("c", 0)</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> KeyError</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> None</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> 0</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> "c"</button>
+</div>
+
+## Q27 / 40
+
+<div class="q-number">Question 27 of 40 — Dictionaries</div>
+<div class="qcm-question">Which method returns all key-value pairs as tuples?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> .keys()</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> .values()</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> .items()</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> .pairs()</button>
+</div>
+
+## Q28 / 40
+
+<div class="q-number">Question 28 of 40 — Dictionaries</div>
+<div class="qcm-question">What happens when you assign <code>d["name"] = "Bob"</code> if key <code>"name"</code> already exists?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> Error — duplicate key</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> A second entry is added</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> The existing value is overwritten</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Nothing happens</button>
+</div>
+
+## Q29 / 40
+
+<div class="q-number">Question 29 of 40 — Dictionaries</div>
+<div class="qcm-question">Which of these can be used as a dictionary key?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> A list</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> A tuple</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> A dictionary</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> A set (mutable)</button>
+</div>
+
+## Q30 / 40
+
+<div class="q-number">Question 30 of 40 — Dictionaries</div>
+<div class="qcm-question">Given <code>d = {"x": 10}</code>, what does <code>d.pop("x")</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> "x"</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> 10</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> {"x": 10}</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> None</button>
+</div>
+
+## Q31 / 40
+
+<div class="q-number">Question 31 of 40 — String Methods</div>
+<div class="qcm-question">What does <code>"  Hello  ".strip()</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> "Hello  "</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> "  Hello"</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> "Hello"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> "hello"</button>
+</div>
+
+## Q32 / 40
+
+<div class="q-number">Question 32 of 40 — String Methods</div>
+<div class="qcm-question">What does <code>"a,b,c".split(",")</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> "a b c"</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> ["a", "b", "c"]</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> ("a", "b", "c")</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> {"a", "b", "c"}</button>
+</div>
+
+## Q33 / 40
+
+<div class="q-number">Question 33 of 40 — String Methods</div>
+<div class="qcm-question">What does <code>"-".join(["x", "y", "z"])</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> ["x-y-z"]</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> "x-y-z"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> "xyz"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q34 / 40
+
+<div class="q-number">Question 34 of 40 — String Methods</div>
+<div class="qcm-question">What does <code>"Hello Python".find("Python")</code> return?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> True</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> 1</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> 6</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> "Python"</button>
+</div>
+
+## Q35 / 40
+
+<div class="q-number">Question 35 of 40 — String Methods</div>
+<div class="qcm-question">After <code>s = "hello"</code>, does <code>s.upper()</code> change <code>s</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> Yes — s becomes "HELLO"</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> No — strings are immutable; it returns a new string</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> It raises an error</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> It modifies s only if assigned back</button>
+</div>
+
+## Q36 / 40
+
+<div class="q-number">Question 36 of 40 — Collections (Mixed)</div>
+<div class="qcm-question">Which collection is <strong>ordered AND mutable</strong>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">A.</span> List</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> Tuple</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> String</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> int</button>
+</div>
+
+## Q37 / 40
+
+<div class="q-number">Question 37 of 40 — Collections (Mixed)</div>
+<div class="qcm-question">What is the main difference between a list and a tuple?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> Lists use () and tuples use []</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> Lists are mutable; tuples are immutable</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> Lists can only hold numbers</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Tuples are not ordered</button>
+</div>
+
+## Q38 / 40
+
+<div class="q-number">Question 38 of 40 — Collections (Mixed)</div>
+<div class="qcm-question">What is the output of <code>len({"a": 1, "b": 2, "c": 3})</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> 6</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> 3</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> 2</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q39 / 40
+
+<div class="q-number">Question 39 of 40 — String Slicing</div>
+<div class="qcm-question">Given <code>s = "Python"</code>, what is <code>s[::-1]</code>?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> "Python"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">B.</span> "Pytho"</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">C.</span> "nohtyP"</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> Error</button>
+</div>
+
+## Q40 / 40
+
+<div class="q-number">Question 40 of 40 — Mixed Review</div>
+<div class="qcm-question">What does <code>list("abc")</code> produce?</div>
+<div class="qcm-grid">
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">A.</span> ("a", "b", "c")</button>
+  <button class="qcm-option" data-correct="true"  onclick="qcm(this, true)"><span class="badge">·</span><span class="qcm-label">B.</span> ["a", "b", "c"]</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">C.</span> {"a", "b", "c"}</button>
+  <button class="qcm-option" data-correct="false" onclick="qcm(this, false)"><span class="badge">·</span><span class="qcm-label">D.</span> "abc"</button>
+</div>
+
+---
+
+## 🎉 Quiz Complete!
+
+<div style="text-align:center; margin-top: 40px;">
+  <h2 style="color: #27ae60;">Well done, everyone!</h2>
+  <p style="font-size: 1.3em; margin-top: 20px;">You've reviewed all the fundamentals of Programming Language II.</p>
+</div>
+
+::: {.callout-tip}
+## 🚀 Next Class
+We move into **Functions, Modules, and File Handling** — building real, reusable programs!
+:::
+
+::: {.callout-note}
+## 📌 Practice at Home
+Pick any 5 questions you got wrong and write a Python program that demonstrates the correct answer.
+:::
